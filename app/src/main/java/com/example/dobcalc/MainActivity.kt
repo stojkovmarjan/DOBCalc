@@ -37,7 +37,16 @@ class MainActivity : AppCompatActivity() {
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
             val date = sdf.parse(dateString)
             tvDate.text = dateString
+
+            calculateMinutes(date);
+
         }, year, month,dayOfMonth).show();
 
     }
+
+    private fun calculateMinutes(date: Date?) {
+        //TODO: Calculate ages in minutes
+    }
+
+
 }
