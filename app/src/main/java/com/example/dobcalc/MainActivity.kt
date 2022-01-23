@@ -9,6 +9,9 @@ import android.app.DatePickerDialog;
 import java.text.SimpleDateFormat
 
 class MainActivity : AppCompatActivity() {
+
+    private val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -32,20 +35,34 @@ class MainActivity : AppCompatActivity() {
         val month = calendar.get(Calendar.MONTH);
         val dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog( this, DatePickerDialog.OnDateSetListener{ _, y, m, d ->
-            var dateString = "$d/${m+1}/$y"
-            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.ENGLISH)
+        val dp = DatePickerDialog( this, DatePickerDialog.OnDateSetListener{ _, y, m, d ->
+            val dateString = "$d/${m+1}/$y"
+
             val date = sdf.parse(dateString)
             tvDate.text = dateString
 
-            calculateMinutes(date);
+            val ageInMinutes = calculateMinutes(date);
 
-        }, year, month,dayOfMonth).show();
+            tvMinutes.text = "$ageInMinutes"
+
+        }, year, month,dayOfMonth)
+
+        dp.datePicker.maxDate = System.currentTimeMillis() - 86400000
+
+        dp.show()
 
     }
 
-    private fun calculateMinutes(date: Date?) {
-        //TODO: Calculate ages in minutes
+    private fun calculateMinutes(date: Date): Long {
+
+        val selectedDateInMinutes = date.time.div(60000)
+        val currentDate = sdf.parse(sdf.format(System.currentTimeMillis()))
+        var currentDateInMinutes: Long = 0
+        currentDate?.let {
+            currentDateInMinutes = currentDate.time / 60000
+        }
+
+        return currentDateInMinutes - selectedDateInMinutes
     }
 
 
